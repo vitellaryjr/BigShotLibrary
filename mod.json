@@ -1,0 +1,7 @@
+{
+    "id": "bigshottest",
+    "name": "Big Shot Testing",
+    "party": ["kris"],
+    
+    "encounter": "test"
+}

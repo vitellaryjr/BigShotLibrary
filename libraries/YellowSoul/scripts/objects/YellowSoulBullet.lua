@@ -12,6 +12,7 @@ function ShotBullet:onYellowShot(shot, damage)
     if self.shot_health <= 0 then
         self:destroy(shot)
     end
+    return "a", false
 end
 
 function ShotBullet:destroy(shot)

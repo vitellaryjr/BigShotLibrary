@@ -31,15 +31,6 @@ function Shot:update()
         if self:collidesWith(bullet) then
             self.hit_bullets[bullet] = true
             local result, result_big = bullet:onYellowShot(self, self.damage)
-            if result == nil then
-                if result_big == nil then
-                    result_big = false
-                end
-                result = "a"
-            end
-            if result_big == nil then
-                result_big = result
-            end
             local real_result
             if self.big then
                 real_result = result_big

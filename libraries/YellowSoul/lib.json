@@ -1,7 +1,6 @@
 {
     "id": "yellowsoul",
     "config": {
-        "allowcheat": true,
-        "teaching": false
+        "allowcheat": true
     }
 }

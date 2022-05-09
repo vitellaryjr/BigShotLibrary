@@ -8,11 +8,14 @@ function YellowSoul:init(x, y, angle)
 
     -- customizable variables
     self.can_use_bigshot = true -- whether the soul can use bigshots
-    self.teaching = Kristal.getLibConfig("yellowsoul", "teaching") and not Game:getFlag("yellowsoul.taught") -- whether the first bigshot should charge slower
+    self.can_use_shots = true -- whether the soul can use normal shots
+    self.can_shoot = true -- whether the soul is allowed to shoot in general
+    self.teaching = false -- whether big shots should charge slowly
     self.allow_cheat = Kristal.getLibConfig("yellowsoul", "allowcheat") -- whether the player is allowed to chain bigshots rapidly
 
     -- internal variables
     self.hold_timer = 0
+    self.charge_sfx = nil
 end
 
 function YellowSoul:update()
@@ -24,30 +27,33 @@ function YellowSoul:update()
         end
         return
     end
+
+    if not self:canShoot() then return end
     
-    if Input.pressed("confirm") and self.hold_timer == 0 then -- fire normal shot
+    if Input.pressed("confirm") and self.hold_timer == 0 and self:canUseShots() then -- fire normal shot
         self:fireShot(false)
     end
-    if self.can_use_bigshot then
+    if self:canUseBigShot() then
         -- check release before checking hold, since if held is false it sets the timer to 0
         if Input.released("confirm") then -- fire big shot
             if self.hold_timer >= 10 and self.hold_timer < 40 then -- didn't hold long enough, fire normal shot
                 self:fireShot(false)
             elseif self.hold_timer >= 40 then -- fire big shot
                 self:fireShot(true)
+                if self.teaching then
+                    self.teaching = false
+                end
+                if self:canCheat() and Input.down("confirm") then -- they are cheating
+                    self:onCheat()
+                end
             end
-            if not self.allow_cheat then -- reset hold timer if cheating is disabled
+            if not self:canCheat() then -- reset hold timer if cheating is disabled
                 self.hold_timer = 0
             end
         end
 
         if Input.down("confirm") then -- charge a big shot
-            -- charge the first shot of a save file slowly if teaching is enabled
-            if self.teaching then
-                self.hold_timer = self.hold_timer + DTMULT
-            else
-                self.hold_timer = self.hold_timer + DTMULT*2
-            end
+            self.hold_timer = self.hold_timer + DTMULT*self:getChargeSpeed()
 
             if self.hold_timer >= 20 and not self.charge_sfx then -- start charging sfx
                 self.charge_sfx = Assets.getSound("chargeshot_charge")
@@ -123,6 +129,20 @@ function YellowSoul:onRemove(parent)
     end
 end
 
+function YellowSoul:getChargeSpeed()
+    if self:isTeaching() then -- charge the first shot of a save file slowly if teaching is enabled
+        return 1
+    else
+        return 2
+    end
+end
+
+function YellowSoul:canUseBigShot() return self.can_use_bigshot end
+function YellowSoul:canUseShots() return self.can_use_shots end
+function YellowSoul:canShoot() return self.can_shoot end
+function YellowSoul:canCheat() return self.allow_cheat end
+function YellowSoul:isTeaching() return self.teaching end
+
 function YellowSoul:fireShot(big)
     if big then
         local shot = Game.battle:addChild(YellowSoulBigShot(self.x, self.y, self.rotation + math.pi/2))
@@ -132,6 +152,10 @@ function YellowSoul:fireShot(big)
         local shot = Game.battle:addChild(YellowSoulShot(self.x, self.y, self.rotation + math.pi/2))
         Assets.playSound("heartshot")
     end
+end
+
+function YellowSoul:onCheat()
+    Game.battle.encounter.funnycheat = (Game.battle.encounter.funnycheat or 0) + 1
 end
 
 return YellowSoul

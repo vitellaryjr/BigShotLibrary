@@ -17,7 +17,7 @@ function Small:onYellowShot(shot, damage)
     self.collidable = false
     self.color = {1,1,1}
     self.graphics.grow = 0.1
-    self:fadeOutAndRemove(0.1)
+    self:fadeTo(0, 0.1, function() self:destroy() end)
     return "a", false
 end
 

@@ -1,4 +1,4 @@
-local Small, super = Class(Bullet)
+local Small, super = Class(YellowSoulBullet)
 
 function Small:init(x, y, dir, speed)
     super:init(self, x, y, "bullets/smallbullet")
@@ -18,7 +18,7 @@ function Small:onYellowShot(shot, damage)
     self.color = {1,1,1}
     self.graphics.grow = 0.1
     self:fadeOutAndRemove(0.1)
-    return "b", false
+    return "a", false
 end
 
 return Small

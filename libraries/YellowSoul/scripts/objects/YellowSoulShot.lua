@@ -66,11 +66,12 @@ function Shot:setSprite(sprite)
 end
 
 function Shot:destroy(anim)
-    anim = anim or "player/shot/shot_hit_a"
+    anim = anim or "player/shot/hit/a"
     if string.len(anim) == 1 then
-        anim = "player/shot/shot_hit_"..anim
+        anim = "player/shot/hit/"..anim
     end
-    local sprite = Sprite(anim, self.x, self.y - self.height/2)
+    local sprite = Sprite(anim, self.x + self.width, self.y)
+    sprite:setOrigin(0.5, 0.5)
     sprite.layer = BATTLE_LAYERS["above_bullets"]
     sprite:play(0.1, false, function()
         sprite:remove()

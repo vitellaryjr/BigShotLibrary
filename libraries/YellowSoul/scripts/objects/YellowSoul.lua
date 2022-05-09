@@ -3,7 +3,7 @@ local YellowSoul, super = Class(Soul)
 function YellowSoul:init(x, y, angle)
     super:init(self, x, y)
 
-    self.rotation = (angle and angle - math.pi/2) or -math.pi/2
+    self.rotation = (angle or 0) - math.pi/2
     self.color = {1,1,0}
 
     -- customizable variables

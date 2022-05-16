@@ -31,5 +31,5 @@ The YellowSoul object has a lot of variables and functions that can be used or a
 
 `getChargeSpeed()`: Returns how fast big shots should charge. By default, returns 1 if `teaching` is true, and 2 otherwise.  
 `canUseBigShot()`, `canUseShots()`, `canShoot()`, `canCheat()`, `isTeaching()`: Returns their respective values.  
-`fireShot(big)`: Called when the player fires a shot. `big` is a boolean defining whether the shot is a big shot or not. Responsible for creating YellowSoulShot or YellowSoulBigShot objects.
+`fireShot(big)`: Called when the player fires a shot. `big` is a boolean defining whether the shot is a big shot or not. Responsible for creating YellowSoulShot or YellowSoulBigShot objects.  
 `onCheat()`: Called each time the player fire a big shot without consuming the charge. By default, increases the encounter's `funnycheat` value by 1, which can be checked by other code to perform actions when the player cheats, if desired. Remember that `funnycheat` will be nil until the player cheats.  

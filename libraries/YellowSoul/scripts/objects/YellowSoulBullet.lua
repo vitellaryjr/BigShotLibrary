@@ -16,7 +16,9 @@ function ShotBullet:onYellowShot(shot, damage)
 end
 
 function ShotBullet:destroy(shot)
-    Game.battle.tension_bar:giveTension(self.shot_tp)
+    if self.shot_tp ~= 0 then
+        Game:giveTension(self.shot_tp)
+    end
     self:remove()
 end
 

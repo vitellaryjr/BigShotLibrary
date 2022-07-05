@@ -123,6 +123,7 @@ function YellowSoul:draw()
 end
 
 function YellowSoul:onRemove(parent)
+    super:onRemove(self, parent)
     if self.charge_sfx then
         self.charge_sfx:stop()
         self.charge_sfx = nil

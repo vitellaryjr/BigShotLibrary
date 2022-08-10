@@ -122,8 +122,8 @@ function YellowSoul:draw()
     self.color = {r,g,b}
 end
 
-function YellowSoul:onRemove(parent)
-    super:onRemove(self, parent)
+function YellowSoul:onRemoveFromStage(stage)
+    super:onRemove(self, stage)
     if self.charge_sfx then
         self.charge_sfx:stop()
         self.charge_sfx = nil

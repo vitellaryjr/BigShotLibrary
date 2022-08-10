@@ -12,14 +12,19 @@ function Shot:init(x, y, angle)
         speed = 16,
         direction = angle,
     }
-
+    
     self.damage = 1
     self.hit_bullets = {}
 end
 
 function Shot:update()
     super:update(self)
-    if self.x > SCREEN_WIDTH + self.sprite.width then
+    local sx, sy = self:localToScreenPos()
+    if (sx >  SCREEN_WIDTH + self.sprite.width)
+    or (sx <             0 - self.sprite.width)
+    or (sy > SCREEN_HEIGHT + self.sprite.width)
+    or (sy <             0 - self.sprite.width)
+    then
         self:remove()
     end
 

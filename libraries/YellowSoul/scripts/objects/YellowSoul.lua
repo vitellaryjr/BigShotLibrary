@@ -39,12 +39,12 @@ function YellowSoul:update()
             if self.hold_timer >= 10 and self.hold_timer < 40 then -- didn't hold long enough, fire normal shot
                 self:fireShot(false)
             elseif self.hold_timer >= 40 then -- fire big shot
+                if self:canCheat() and Input.down("confirm") then -- they are cheating
+                    self:onCheat()
+                end
                 self:fireShot(true)
                 if self.teaching then
                     self.teaching = false
-                end
-                if self:canCheat() and Input.down("confirm") then -- they are cheating
-                    self:onCheat()
                 end
             end
             if not self:canCheat() then -- reset hold timer if cheating is disabled
@@ -145,13 +145,18 @@ function YellowSoul:canCheat() return self.allow_cheat end
 function YellowSoul:isTeaching() return self.teaching end
 
 function YellowSoul:fireShot(big)
+    local shot
     if big then
-        local shot = Game.battle:addChild(YellowSoulBigShot(self.x, self.y, self.rotation + math.pi/2))
+        shot = Game.battle:addChild(YellowSoulBigShot(self.x, self.y, self.rotation + math.pi/2))
         Assets.playSound("chargeshot_fire")
     else
         if #Game.stage:getObjects(YellowSoulShot) >= 3 then return end -- only allow 3 at once
-        local shot = Game.battle:addChild(YellowSoulShot(self.x, self.y, self.rotation + math.pi/2))
+        shot = Game.battle:addChild(YellowSoulShot(self.x, self.y, self.rotation + math.pi/2))
         Assets.playSound("heartshot")
+    end
+    Kristal.callEvent("onYellowShot", big, shot)
+    if Game.battle.encounter.onYellowShot then
+        Game.battle.encounter:onYellowShot(big, shot)
     end
 end
 
